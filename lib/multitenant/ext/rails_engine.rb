@@ -16,6 +16,11 @@ module ::Rails
 					engine.db_migrate(logger, verbose)
 				end
 			end
+			def self.migrate_tenant_engines(logger = nil, verbose = false)
+				self.tenant_engines.collect(&:class).uniq.each do |engine|
+					engine.db_migrate(logger, verbose)
+				end
+			end
 		end
 	end
 end
