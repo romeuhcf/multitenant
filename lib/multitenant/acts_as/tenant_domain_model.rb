@@ -15,7 +15,7 @@ module MultiTenant
 	  class_attribute :tenant_model_superclass
           validates_presence_of :#{configuration[:column]}
           validates_uniqueness_of :#{configuration[:column]}
-          validates_format_of :#{configuration[:column]} , :with => /^[a-z_]{3,}$/
+          validates_format_of :#{configuration[:column]} , :with => /^[a-z_][a-z0-9_]{2,}$/
 
           def self.tenant_name_attribute
 	  	'#{configuration[:column]}'
