@@ -51,8 +51,11 @@ module MultiTenant
         self
       end
    
+   
       def database_drop
-        self.class.tenant_model_superclass.connection.drop_database(database_config['database'])
+        if self.class.tenant_model_superclass.connection.respond_to? :drop_database
+          self.class.tenant_model_superclass.connection.drop_database(database_config['database'])
+        end
         self
       end
    
@@ -70,7 +73,6 @@ module MultiTenant
    
       def on_mydb
         self.class.tenant_model_superclass.establish_connection(database_config)
-        ActiveRecord::Base.establish_connection(database_config)
         yield
       end
    
@@ -79,6 +81,5 @@ module MultiTenant
       end
    
     end
-
   end
 end
