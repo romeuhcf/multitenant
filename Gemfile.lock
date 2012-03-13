@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/romeuhcf/migratable_engine.git
-  revision: ae3075f608d0b11db2a79951f543bdff15302296
+  revision: 16f7b8b1e66ba02c42351f4d6c5768280d238c3a
   specs:
     migratable_engine (0.0.1)
       rails (~> 3.2.2.rc1)
