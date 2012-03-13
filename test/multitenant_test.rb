@@ -33,6 +33,7 @@ class MultitenantTest < ActiveSupport::TestCase
 
 
   test "I can create two accounts" do
+	ActiveRecord::Migrator.migrate_on_connection(Dummy::Application.paths['db/migrate'].existent)
 	Account.delete_all
 
 	foo = Account.create!(:subdomain => 'foo')
