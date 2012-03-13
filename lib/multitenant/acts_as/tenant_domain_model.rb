@@ -7,7 +7,7 @@ module MultiTenant
 
     module ClassMethods
       def acts_as_tenant_domain_model(options = {})
-        configuration = {:column => 'domain', :tenant_model_superclass_name => '::Account'}
+        configuration = {:column => 'domain', :tenant_model_superclass_name => 'Tenant::ActiveRecord::Base'}
         configuration.update(options) if options.is_a?(Hash)
 
         # your code will go here
@@ -64,16 +64,18 @@ module MultiTenant
         database_create
       end
 
-      def database_migrate
+      def database_migrate(migrations_path = nil)
 	::Rails::Engine::Railties.tenant_engines.collect{|e| e.class}.uniq.each do |engine|
-		engine.db_migrate(database_config)
+		engine.db_migrate(database_config, migrations_path)
 	end
         self
       end
    
       def on_mydb
+	old_config = self.class.tenant_model_superclass.get_config
         self.class.tenant_model_superclass.establish_connection(database_config)
         yield
+        self.class.tenant_model_superclass.establish_connection(old_config)
       end
    
       def set_as_current

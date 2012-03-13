@@ -1,8 +1,5 @@
 require 'test_helper'
 
-
-
-
 class MultitenantTest < ActiveSupport::TestCase
 
   module TestEngines
@@ -32,5 +29,51 @@ class MultitenantTest < ActiveSupport::TestCase
     assert tenant_engine_classes.include?( MultitenantTest::TestEngines::OtherTenantEngine )
     assert !tenant_engine_classes.include?( TestEngines::OtherNonTenantEngine )
     assert !tenant_engine_classes.include?( TestEngines::NonTenantEngine )
+  end
+
+
+  test "I can create two accounts" do
+	Account.delete_all
+
+	foo = Account.create!(:subdomain => 'foo')
+	bar = Account.create!(:subdomain => 'bar')
+
+	foo.database_recreate
+	bar.database_recreate
+	
+	foo.database_migrate(Dummy::Application.paths['db/migrate'].existent)
+	bar.database_migrate(Dummy::Application.paths['db/migrate'].existent)
+
+	bar.set_as_current
+
+	Post.create!(:message => 'bar post 1')
+	Post.create!(:message => 'bar post 2')
+	assert Post.count == 2, 'bar should have 2 posts'
+
+
+
+
+	foo.on_mydb do
+		Post.create!(:message => 'foo post 1')
+		assert Post.count == 1, 'foo should have 1 posts'
+	end
+	Post.create!(:message => 'bar post 3')
+	assert Post.count == 3, 'bar should have 3 posts'
+
+	bar.on_mydb do
+		Post.create!(:message => 'bar post 4')
+		assert Post.count == 4, 'bar should have 4 posts'
+	end
+	Post.create!(:message => 'bar post 5')
+	assert Post.count == 5, 'bar should have 5 posts'
+	foo.set_as_current
+	Post.create!(:message => 'foo post 2')
+	assert Post.count == 2, 'foo should have 2 posts'
+	bar.set_as_current
+	Post.create!(:message => 'bar post 6')
+	assert Post.count == 6, 'bar should have 6 posts'
+
+	bar.database_drop
+	foo.database_drop
   end
 end
