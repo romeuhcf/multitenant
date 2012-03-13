@@ -35,7 +35,9 @@ class MultitenantTest < ActiveSupport::TestCase
   test "I can create two accounts" do
 	ActiveRecord::Migrator.migrate_on_connection(Dummy::Application.paths['db/migrate'].existent)
 	ActiveRecord::Base.establish_connection(ActiveRecord::Base.get_config)
-	
+
+	puts '-------------------------'
+	puts Account	
 
 	Account.delete_all
 
