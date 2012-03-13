@@ -34,6 +34,9 @@ class MultitenantTest < ActiveSupport::TestCase
 
   test "I can create two accounts" do
 	ActiveRecord::Migrator.migrate_on_connection(Dummy::Application.paths['db/migrate'].existent)
+	ActiveRecord::Base.establish_connection(ActiveRecord::Base.get_config)
+	
+
 	Account.delete_all
 
 	foo = Account.create!(:subdomain => 'foo')
@@ -74,7 +77,7 @@ class MultitenantTest < ActiveSupport::TestCase
 	Post.create!(:message => 'bar post 6')
 	assert Post.count == 6, 'bar should have 6 posts'
 
-	bar.database_drop
-	foo.database_drop
+	#bar.database_drop
+	#foo.database_drop
   end
 end
