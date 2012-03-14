@@ -7,7 +7,10 @@ gemspec
 gem 'migratable_engine', :git => 'git://github.com/romeuhcf/migratable_engine.git'
 
 # jquery-rails is used by the dummy application
-gem "jquery-rails"
+group :test do
+  gem 'mysql2'
+  gem "jquery-rails"
+end
 
 # Declare any dependencies that are still in development here instead of in
 # your gemspec. These might include edge Rails or gems from your path or
