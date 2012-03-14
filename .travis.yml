@@ -2,5 +2,5 @@ rvm:
   - 1.9.3
 script: "bundle exec rake test" 
 before_script:
-  - "cd test/dummy && bundle exec rake db:create db:schema:load" 
+  - "cd test/dummy && bundle exec rake db:create db:migrate" 
 bundler_args: "--without development" 
